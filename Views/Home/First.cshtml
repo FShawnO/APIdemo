@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewData["Title"] = "First";
+}
+<h1>First Ajax Demo</h1>
+
+@section Styles {
+    <style>
+        #img1{
+            display:none;
+        }
+    </style>
+}
+
+<button id="buttonStart" class="btn btn-primary">Ajax Start</button>
+<button id="buttonStop" class="btn btn-warning">Ajax Stop</button>
+<img src="~/images/await.gif" id="img1" sytle="display:none" />
+<div id="div1"></div>
+
+
+@section Scripts {
+    <script>
+        const btn = document.querySelector("#buttonStart");
+        const btnStop = document.querySelector("#buttonStop");
+        const myDiv = document.querySelector("#div1");
+        const imgLoading = document.querySelector('#img1');
+        let abortController;
+        // btn.addEventListener('click', () => {
+        //     myDiv.textContent = "button click";
+        //     console.log("click");
+        btnStop.addEventListener('click', () => {
+            if (abortController) {
+                abortController.abort();
+            }
+        })
+
+        // $(document).ready(function () {
+        //         imgLoading.setAttribute("display", "none");
+        //     });
+
+        btn.addEventListener('click', async () => {
+            try {
+                myDiv.innerHTML = "";
+                imgLoading.style.display = "inline";
+                btn.setAttribute("disabled", "disabled");
+
+                abortController = new AbortController();
+                const signal = abortController.signal;
+
+                setTimeout(() => {
+                    abortController.abort();
+                }, 5000)
+
+                const response = await fetch('@Url.Content("~/api/index")', {signal:signal});
+                const data = await response.text();
+                if (!respopnse.ok) throw new Error(`有錯誤，狀態碼： ${response.status}`);
+                myDiv.innerHTML = `<h2>${data}</h2>`;
+            } catch (error) {
+                let errorMessage = error.message
+                if (error.name === 'AbortError') {
+                    errorMessage = "Please come later!"
+                }
+                myDiv.innerHTML = `<h2>${errorMessage}</h2>`;
+            } finally {
+                imgLoading.style.display = "none";
+                btn.removeAttribute("disabled");
+            }
+        })
+
+            
+            // .then(response => {
+            //     if (!respopnse.ok {
+            //         throw new Error(`有錯誤，狀態碼： ${response.status}`);
+            //     }
+            //     return response.text();
+            // })
+            // .then(data => myDiv.innerHTML = data)
+            // .catch(error => myDiv.innerHTML = error.message);
+            // const response = await fetch('@Url.Content("~/API/index")');
+            // const data = await response.text();
+            // myDiv.innerHTML = `<h2>${data}</h2>`
+
+            // fetch('@Url.Content("~/API/index")')
+            //     .then(response => {
+            //         console.log(response);
+            //         response.headers.forEach((value, name) => {
+            //             console.log(`${name}: `, `${value}`)
+            //         })
+            //         console.log(response.ok);
+            //         console.log(response.body);
+            //         if (response.ok) {
+            //             return response.text();
+            //         }
+            //         console.log(response.text());
+            //     })
+            //     .then(data => {
+            //         console.log(data);
+            //         myDiv.innerHTML = `<h2>${data}</h2>`
+            //     });
+            // console.log(fetch('/api/index'));
+    </script>
+}
+

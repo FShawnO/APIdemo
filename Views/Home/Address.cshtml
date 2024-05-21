@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewData["Title"] = "Address";
+}
+
+<h1>Address</h1>
+<select id="selectCity">
+
+</select>
+<select id="selectSite">
+
+</select>
+<select id="selectRoad">
+
+</select>
+
+@section Styles {
+    <style>
+
+    </style>
+}
+
+@section Scripts {
+<script>
+    const selCity = document.querySelector('#selectCity');
+    const selSite = document.querySelector('#selectSite');
+    const selRoad = document.querySelector('#selectRoad');
+
+    (async ()=>{
+
+            const response = await fetch('@Url.Content("~/API/cities")');
+
+        if (!response.ok) {
+            console.log(`有錯誤：${response.status}`)
+            return
+        }
+            const datas = await response.json();
+        const cities = datas.map((city) => {// , index, arr
+            return (`<option value="${city}">${city}</option>`);
+        })
+            selCity.innerHTML = cities.join("");
+
+    })();
+
+    const loadDistricts = () => {
+        const city = selCity.options[selCity.selectedIndex].value;
+
+        (async () => {
+                    const response = await fetch('@Url.Content("~/API/cities")?ClauseID=1&whereClause=' + city);
+
+            if (!response.ok) {
+                console.log(`有錯誤：${response.status}`)
+                return
+            }
+            const datas = await response.json();
+               const sites = datas.map((site) => {// , index, arr
+                   return (`<option value="${site}">${site}</option>`);
+            })
+               selSite.innerHTML = sites.join("");
+        })();
+
+        //console.log(selCity.selectedIndex);
+        //console.log(selCity.options[selCity.selectedIndex].value);
+        //console.log(selCity.options[selCity.selectedIndex].text);
+        //console.log('change');
+    }
+
+    const loadRoads = () => {
+        const site = selSite.options[selSite.selectedIndex].value;
+
+        (async () => {
+            const response = await fetch('@Url.Content("~/API/cities")?ClauseID=2&whereClause=' + site);
+
+            if (!response.ok) {
+                console.log(`有錯誤：${response.status}`)
+                return
+            }
+            const datas = await response.json();
+            const roads = datas.map((road) => {// , index, arr
+                return (`<option value="${road}">${road}</option>`);
+            })
+                selRoad.innerHTML = roads.join("");
+        })();
+
+        //console.log(selCity.selectedIndex);
+        //console.log(selCity.options[selCity.selectedIndex].value);
+        //console.log(selCity.options[selCity.selectedIndex].text);
+        //console.log('change');
+    }
+
+    selCity.addEventListener('change', loadDistricts);
+    selSite.addEventListener('change', loadRoads);
+
+    // const cities = datas.map((city) => {// , index, arr
+    //     return (`<option value="${city}">${city}</option>`);
+    // })
+    //     console.log(cities);
+</script>
+}

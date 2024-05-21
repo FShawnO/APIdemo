@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+<div id="div1">
+
+</div>
+@section Styles {
+    <style>
+
+    </style>
+}
+
+@section Scripts {
+<script>
+    const divResult = document.querySelector('#div1');
+
+    (async () => {
+        const url = '@Url.Content("~/API/register")?id=5&age=42&name=Tom';
+        const response = await fetch(url);
+        const data = await response.text();
+    divResult.innerHTML = data;
+    })();
+       
+</script>
+}
