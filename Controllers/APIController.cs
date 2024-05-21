@@ -27,6 +27,25 @@ namespace APIdemo.Controllers
             return Content($"{id} - {name}, Hello! you age {age}","text/html", System.Text.Encoding.UTF8);
         }
 
+        public IActionResult CheckAccount(string Account) 
+        {
+            if (string.IsNullOrEmpty(Account))
+            {
+                return NotFound();
+            } else
+            {
+                var account = _context.Members.Where(y => y.Name.Equals(Account)).Select(x => x.Name);
+                if (account.Any())
+                {
+                    return Json(account);
+                } else
+                {
+                    return NotFound();
+                }
+            }
+        }
+
+
         public IActionResult Cities(string whereClause, int ClauseID)
         {
             if (string.IsNullOrEmpty(whereClause)) {
@@ -44,7 +63,7 @@ namespace APIdemo.Controllers
                     return Json(roads);
                 } else
                 {
-                    throw new Exception();
+                    return NotFound();
                 }
             }
 

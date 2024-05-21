@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewData["Title"] = "CheckAccount";
+}
+
+@section Styles {
+    <style>
+        .input-group{
+            display: block;
+        }
+
+        #Username,#Email,#Age {
+            width: 50%;
+        }
+
+        #checkRes {
+            background-color: yellow;
+        }
+    </style>
+}
+
+@section Scripts {
+<script>
+        objUsername = document.getElementById("Username");
+        objUsername.addEventListener("blur", () => { checkInput("Username", event) });
+       
+        function checkInput(field,event) {
+
+			//console.log();
+            if (field == "Username") {
+                var objCheckRes = document.getElementById("checkRes");
+                var objField = document.getElementById("Username");
+
+                (async () => {
+
+                    const response = await fetch('@Url.Content("~/API/CheckAccount")');
+
+                    if (!response.ok) {
+                        console.log(`有錯誤：${response.status}`)
+                        return
+                    }
+                    const datas = await response.json();
+                    const accounts = datas.map((account) => {// , index, arr
+                        return (`帳號 ${account}" 已存在！`);
+                    })
+                    checkRes.innerHTML = accounts.join("");
+
+                })();
+			}
+		}
+</script>
+}
+<h1>CheckAccount</h1>
+
+<form >
+    <div class="input-group mb-3" >
+      <label for="Username">姓名：</label>
+      <input type="text" id="Username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+      <labal id="checkRes"></labal>
+    </div>
+    <div class="input-group mb-3">
+        <label for="Email">電子郵件：</label>
+        <input type="email" id="Email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
+    </div>
+    <div class="input-group mb-3">
+        <label for="Age">年紀：</label>
+        <input type="text" id="Age" class="form-control" placeholder="Age" aria-label="Age" aria-describedby="basic-addon1">
+    </div>
+</form>
