@@ -31,12 +31,22 @@ namespace APIdemo.Controllers
             return View();
         }
 
+        public IActionResult CheckAccount()
+        {
+            return View();
+        }
+
         public IActionResult Register()
         {
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Spots()
         {
             return View();
         }

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "CheckAccount";
+    ViewData["Title"] = "Accounts";
 }
 
 @section Styles {
@@ -33,17 +33,19 @@
 
                 (async () => {
 
-                    const response = await fetch('@Url.Content("~/API/CheckAccount")');
-
+                    const response = await fetch(`@Url.Content("~/API/Accounts")?Account=${objField.value}`);
+                    //const data = await response.text();
                     if (!response.ok) {
-                        console.log(`有錯誤：${response.status}`)
+                        throw new Error(`有錯誤，狀態碼： ${response.status}`);
+                        //checkRes.innerHTML = data;
                         return
                     }
-                    const datas = await response.json();
-                    const accounts = datas.map((account) => {// , index, arr
-                        return (`帳號 ${account}" 已存在！`);
-                    })
-                    checkRes.innerHTML = accounts.join("");
+                    const data = await response.text(); //.json();
+                    //const accounts = datas.map((account) => {// , index, arr
+                    //    return (`帳號 ${account}" 已存在！`);
+                    //})
+                    checkRes.innerHTML = data;
+                    //checkRes.innerHTML = accounts.join("");
 
                 })();
 			}

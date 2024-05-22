@@ -28,7 +28,7 @@
 
     (async ()=>{
 
-            const response = await fetch('@Url.Content("~/API/cities")');
+        const response = await fetch('@Url.Content("~/API/cities")');
 
         if (!response.ok) {
             console.log(`有錯誤：${response.status}`)
@@ -38,7 +38,8 @@
         const cities = datas.map((city) => {// , index, arr
             return (`<option value="${city}">${city}</option>`);
         })
-            selCity.innerHTML = cities.join("");
+        selCity.innerHTML = cities.join("");
+        loadDistricts();
 
     })();
 
@@ -46,7 +47,7 @@
         const city = selCity.options[selCity.selectedIndex].value;
 
         (async () => {
-                    const response = await fetch('@Url.Content("~/API/cities")?ClauseID=1&whereClause=' + city);
+                    const response = await fetch(`@Url.Content("~/API/cities")?ClauseID=1&whereClause=${city}`);
 
             if (!response.ok) {
                 console.log(`有錯誤：${response.status}`)
@@ -56,7 +57,9 @@
                const sites = datas.map((site) => {// , index, arr
                    return (`<option value="${site}">${site}</option>`);
             })
-               selSite.innerHTML = sites.join("");
+            selSite.innerHTML = sites.join("");
+            loadRoads();
+
         })();
 
         //console.log(selCity.selectedIndex);

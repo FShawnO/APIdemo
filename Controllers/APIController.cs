@@ -1,15 +1,19 @@
 ﻿using APIdemo.Models;
+using APIdemo.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIdemo.Controllers
 {
     public class APIController : Controller
     {        
         private readonly MyDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public APIController(MyDbContext context)
+        public APIController(MyDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment; 
         }
 
         public IActionResult Index()
@@ -19,30 +23,68 @@ namespace APIdemo.Controllers
             return Content("世界你好!", "text/html", System.Text.Encoding.UTF8);
         }
 
-        public IActionResult Register(int id, string name, int age = 20)
+        //public IActionResult Register(string Username, string Email, string Age)
+        public IActionResult Register(Member member, IFormFile avator)
         {
-            if(string.IsNullOrEmpty(name)) {
-                name = "guest";
+            if(string.IsNullOrEmpty(member.Name)) {
+                member.Name = "guest";
             }
-            return Content($"{id} - {name}, Hello! you age {age}","text/html", System.Text.Encoding.UTF8);
+
+            //_context.Members.Add(member);
+            //_context.SaveChanges();
+
+            //string info = $"{avator.FileName} - {avator.Length} - {avator.ContentType}";
+            //string info = _environment.WebRootPath;
+            //string test = _environment.ContentRootPath;
+            string uploadPath = Path.Combine(_environment.WebRootPath, "uploads", avator.FileName);
+
+            //string uploadPath = @"D:\Data\code_test\MSIT158\RESTfulAPI_AJAX\APIdemo\wwwroot\uploads\${}";
+            using(var fileStream = new FileStream(uploadPath, FileMode.Create))
+            {
+                avator.CopyTo(fileStream);
+            }
+
+            byte[] imgByte = null;
+            using(var memoryStream = new MemoryStream())
+            {
+                avator.CopyTo(memoryStream);
+                imgByte = memoryStream.ToArray();
+            }
+
+            member.FileName = avator.FileName;
+            member.FileData = imgByte;
+            _context.Members.Add(member);
+            _context.SaveChanges();
+
+            return Content($"檔案名稱{avator.FileName}", "text/plain", System.Text.Encoding.UTF8);
+            //return Content($"Hello {member.Name}! You age {member.Age}, your Email is {member.Email}", "text/plain", System.Text.Encoding.UTF8);
         }
 
-        public IActionResult CheckAccount(string Account) 
+        public IActionResult Accounts(string Account) 
         {
+            string message;
             if (string.IsNullOrEmpty(Account))
             {
-                return NotFound();
+                message = "請輸入資料！" + Account;
+                //var accounts = _context.Members.Select(x => x.Name);
+                //return Json(accounts);
+                //return NotFound();
             } else
             {
+                //xvar account = _context.Members.Any(y => y.Name.Equals(Account));
                 var account = _context.Members.Where(y => y.Name.Equals(Account)).Select(x => x.Name);
                 if (account.Any())
                 {
-                    return Json(account);
+                    message = "此帳號已存在！";
+                    //return Content(message, "text/plain", System.Text.Encoding.UTF8);
                 } else
                 {
-                    return NotFound();
+                    message = "此帳號可使用！";
+                    //return NotFound();
                 }
+
             }
+            return Content(message, "text/plain", System.Text.Encoding.UTF8);
         }
 
 
@@ -68,6 +110,26 @@ namespace APIdemo.Controllers
             }
 
             //return Content("<h2>世界你好!</h2>", "text/html", System.Text.Encoding.UTF8);
+        }
+
+        [HttpPost]
+        public IActionResult Spots([FromBody] SearchDTO SearchDTO)
+        {
+            var spots = SearchDTO.categoryId == 0 ? _context.SpotImagesSpots : _context.SpotImagesSpots.Where(s => s.CategoryId == SearchDTO.categoryId);
+            if (!string.IsNullOrEmpty(SearchDTO.keyword)){
+                spots = spots.Where(s => s.SpotTitle.Contains(SearchDTO.keyword) || s.SpotDescription.Contains(SearchDTO.keyword));
+            }
+
+            //int totalCount = spots.Count();
+            //int pageSize = SearchDTO.pageSize;
+            //int page = SearchDTO.page;
+            //int totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+            //spots = spots.Skip((page-1)*pageSize).Take(pageSize);
+
+            //SpotsPagingDTO spotsPaging = new SpotsPagingDTO();
+            //spotsPaging.TotalCount = totalCount;
+            //spotsPaging.TotalPages = totalPages;
+            return Json(spots);
         }
 
         public IActionResult Avator(int id)
