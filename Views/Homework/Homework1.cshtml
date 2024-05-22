@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "HomeworkController";
+}
+
+<h1>Homework1</h1>
+<div class="card-group">
+    <div class="card" id="card" style="display:nono">
+        <img src="" class="card-img-top" alt="">
+        <div class="card-body">
+            <h7 class="card-title"></h7>
+            <p class="card-text"></p>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted"></small>
+        </div>
+    </div>
+</div>
+@section Styles {
+    <style>
+        .card{
+            min-width: 25%;
+            max-width: 25%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/js/travel.js"></script>
+    <script>
+        // const emps = emp.spots.map(sport => {
+        //     //解構賦值
+        //     const { name, workYears, salary } = employee;
+        //     return (
+        //         `<tr>
+        //              <td>${name}</td>
+        //              <td>${workYears}</td>
+        //              <td>${salary}</td>
+        //              </tr>
+        //              `
+        //     )
+        // })
+        // tb.innerHTML = emps.join("");
+        for (let i = 0, max = spots.CommonFormat.Section.length; i < max; i++) {
+            let cardObj = document.getElementById("card");
+            cardObj.querySelector('.card-img-top').src = spots.CommonFormat.Section[i].file.img[0].text;
+            cardObj.querySelectorAll('h7').item(0).innerText = spots.CommonFormat.Section[i].stitle;
+            cardObj.querySelectorAll('p').item(0).innerText = spots.CommonFormat.Section[i].xbody;
+            cardObj.querySelector('.card-footer').innerText = spots.CommonFormat.Section[i].MEMO_TIME;
+             
+            let objClone = cardObj.cloneNode(true);
+            cardObj.parentNode.append(objClone);
+        }
+
+    </script>
+}

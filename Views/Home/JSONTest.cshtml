@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+<table class="table" id="table1">
+    <thead>
+        <tr>
+            <th scope="col">姓名</th>
+            <th scope="col">年資</th>
+            <th scope="col">薪水</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+<ul id="ul1">
+    
+</ul>
+@section Styles {
+    <style>
+
+    </style>
+}
+
+@section Scripts {
+<script>
+    let emp = { "id": 1, "name": "Jack", "email":"Jack@gmail.com" }
+    //console.log(emp.id);
+    const aMail = "email";
+    //console.log(emp[aMail]);
+
+    const datas = [
+            { "id": 1, "name": "Jack", "email": "Jack@gmail.com", "phone":["0221397856","0933012345"]},
+            { "id": 2, "name": "Mary", "email": "Mary@gmail.com", "phone": ["0287643498", "0988678345"] },
+            { "id": 3, "name": "Tom", "email": "Tom@gmail.com", "phone": ["0946123456", "0977849756"] }
+    ]
+
+    //datas[2].phone => array
+    //console.log(datas[2].email);
+    //console.log(datas[2].phone[1]);
+    //
+    //console.log(datas.length);
+    //console.log(emp.length); //undefined;
+
+    // for (let i = 0, max = datas.length; i < max; i++) {
+    //     console.log(datas[i].id);
+    //     console.log(datas[i].name);
+    //     console.log(datas[i].email);
+    //     console.log(datas[i].phone[0]);
+    //     console.log(datas[i].phone[1]);
+    // }
+
+    emp = {
+        "employees": [
+            { "name": "Jack", "workYears": 3, "salary": 35000 },
+            { "name": "Mary", "workYears": 5, "salary": 40000 },
+            { "name": "Tom", "workYears": 7, "salary": 45000 }
+        ]
+    };
+
+    //for (let i = 0, max = emp.employees.length; i < max; i++) {
+    //    console.log("name: " + emp.employees[i].name + ", workYears: " + emp.employees[i].workYears + ", salary: " + emp.employees[i].salary);
+    //}
+
+    emp.employees.forEach((emp,idx,arr) => {//index, array
+        console.log(idx); //0、1、2
+        console.log(arr); //[{},{},{}]
+        //console.log(emp);
+        console.log(emp.name);
+    })
+
+    const myUl = document.querySelector('#ul1');
+
+    //emp.employees.forEach(emp => {
+    //    //console.log(emp.name)
+    //    const eleLi = document.createElement("li");
+    //    const textLi = document.createTextNode(emp.name);
+    //        eleLi.appendChild(textLi);
+    //        myUl.appendChild(eleLi)
+    //})
+
+    //const emps = emp.employees.map(emp => 
+    //    {
+    //    return (
+    //            "<Li>" + emp.name + ", " + emp.salary + "</li>"
+    //    )
+    //}
+    //);
+
+    //const emps = emp.employees.map(emp => `<Li>${emp.name}</li>`)
+
+    //myUl.innerHTML = emps.join("");
+    //console.log(emps.join(""));
+
+    const tb = document.querySelector('#table1 tbody');
+    // const emps = emp.employees.map(emp=>{
+    //     return(
+    //         `<tr>
+    //         <td>${emp.name}</td>
+    //         <tr>${emp.name}</td>
+    //         <tr>${emp.name}</td>
+    //         </tr>
+    //         `
+    //     )
+    // })
+    // tb.innerHTML = emps.join("");
+
+    const emps = emp.employees.map(employee => {
+        //解構賦值
+        const { name, workYears, salary } = employee;
+        return (
+            `<tr>
+             <td>${name}</td>
+             <td>${workYears}</td>
+             <td>${salary}</td>
+             </tr>
+             `
+        )
+    })
+    tb.innerHTML = emps.join("");
+</script>
+}
