@@ -1,6 +1,6 @@
 ﻿namespace APIdemo.Models
 {
-    public class MemberVM
+    public class MemberDTO
     {
         public string? Username { get; set; }
 
