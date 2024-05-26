@@ -8,36 +8,51 @@
 
 <h1>台北市景點</h1>
 
-<div class="row mb-3">
-    <div class="col-3" style="width: 10%">
+<div class="row mb-3" style="width: 100%">
+    <div class="col-3" style="width: 150px">
         <select class="form-control" style="font-size: 14px; height: 35px" id="itemNo"
                 name="itemNo" onchange="change3(this.selectedIndex)">
            @*  <option value=" ">Items per Page:</option> *@
             <option value="10">
-                10
+                每頁 10 筆資料 
             </option>
             <option value="20">
-                20
+                每頁 20 筆資料 
             </option>
             <option value="30">
-                30
+                每頁 30 筆資料 
             </option>
             <option value="40">
-                40
+                每頁 40 筆資料 
             </option>
         </select>
     </div>
-    <div class="col-6">
+    <div class="col-6" style="width: auto">
         <nav>
             <ul class="pagination" id="ul1">
             </ul>
         </nav>
     </div>
-    <div class="col-3">
-        <input type="search" placeholder="搜尋景點資料" class="form-control" id="keywordSearch" />
+    <div class="col-6" id="divRight">
+        <div class="col-6" id="divSequence" style="font-size: 14px; padding-top: 0px; width: 160px;">
+                <select title="Select Order" class="form-control"
+                        style="font-size: 14px; height: 35px" id="sequence" name="sequence"
+                        onchange="change2(this.selectedIndex)">
+                @*     <option value=" ">Select Order:</option> *@
+                    <option value="asc">
+                        依景點編號升冪排列 
+                    </option>
+                    <option value="desc">
+                        依景點編號降冪排列 
+                    </option>
+                </select>
+        </div>
+        <div class="col-3" id="divSearch" style="width: 300px; margin-left: 5px">
+            <input type="search" placeholder="搜尋景點資料" class="form-control" id="keywordSearch" />
+        </div>
     </div>
 </div>
-<div class="card-group" id="div1">
+<div class="card-group" id="div1" style="width:100%;">
     <div class="card" id="card" style="display:nono">
         <img src="" class="card-img-top" alt="">
         <div class="card-body">
@@ -56,11 +71,21 @@
 @section Styles {
     <style>
         .card {
-            min-width: 25%;
-            max-width: 25%;
+            min-width: 250px;
+            max-width: 250px;
             display: flex;
             flex-wrap: wrap;
         }
+
+        #divRight{
+            margin: 0 auto;
+            width: 100px;
+            display: block;
+            display: inline-flex;
+            white-space: nowrap;
+            text-align: right;
+        }
+
     </style>
 }
 
@@ -70,7 +95,8 @@
         const ulPaging = document.querySelector('#ul1');
         let cardObj = document.getElementById("card");
         const divSpots = document.querySelector('#div1');
-    const itemNo = document.querySelector('#itemNo');
+        const sequence = document.querySelector('#sequence');
+        const itemNo = document.querySelector('#itemNo');
 
     var searchData = {
         "categoryId": 0,
@@ -80,6 +106,14 @@
         "sortBy":"SpotId",
         "sortType":"asc"
     };
+
+        function change2() {
+            var selectedOption = sequence.options[sequence.selectedIndex];
+            const vi2 = selectedOption.value;
+            //console.log(vi3);
+            searchData.sortType = vi2;
+            loadSpots();
+        }
 
         function change3() {
             var selectedOption = itemNo.options[itemNo.selectedIndex];
@@ -156,7 +190,8 @@
                 //顯示分頁按鈕
                 let liPages = "";
                 for (let i = 1, max = data.totalPages; i <= max; i++) {
-                    liPages += `<li class="page-item" onclick="pagingHandler(${i})"><a class="page-link">${i}</a></li>`
+                var currentPage = i == searchData.page ? `<i><strong>${i}</strong></i>` : i;
+                liPages += `<li class="page-item" onclick="pagingHandler(${i})"><a class="page-link">${currentPage}</a></li>`
                 }
                 ulPaging.innerHTML = liPages;
 
