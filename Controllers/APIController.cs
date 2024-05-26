@@ -155,6 +155,7 @@ namespace APIdemo.Controllers
             SpotsPagingDTO spotsPaging = new SpotsPagingDTO();
             spotsPaging.TotalCount = totalCount;
             spotsPaging.TotalPages = totalPages;
+            spotsPaging.pageSize = pageSize;
             spotsPaging.SpotsResult = spots.ToList();
 
 

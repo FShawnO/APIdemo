@@ -1,12 +1,32 @@
 ﻿
 @{
     ViewData["Title"] = "Spots";
+    @using APIdemo.Models.ViewModel;
+    PaginationVM pgParam = new PaginationVM();
+    pgParam.itemNo = 10;
 }
 
 <h1>台北市景點</h1>
 
 <div class="row mb-3">
-    <div class="col-3"></div>
+    <div class="col-3" style="width: 10%">
+        <select class="form-control" style="font-size: 14px; height: 35px" id="itemNo"
+                name="itemNo" onchange="change3(this.selectedIndex)">
+           @*  <option value=" ">Items per Page:</option> *@
+            <option value="10">
+                10
+            </option>
+            <option value="20">
+                20
+            </option>
+            <option value="30">
+                30
+            </option>
+            <option value="40">
+                40
+            </option>
+        </select>
+    </div>
     <div class="col-6">
         <nav>
             <ul class="pagination" id="ul1">
@@ -50,15 +70,26 @@
         const ulPaging = document.querySelector('#ul1');
         let cardObj = document.getElementById("card");
         const divSpots = document.querySelector('#div1');
+    const itemNo = document.querySelector('#itemNo');
 
-    const searchData = {
+    var searchData = {
         "categoryId": 0,
         "keyword": "公園",
         "page":1,
-        "pageSize":9,
+        "pageSize": 10,
         "sortBy":"SpotId",
         "sortType":"asc"
     };
+
+        function change3() {
+            var selectedOption = itemNo.options[itemNo.selectedIndex];
+            const vi3 = selectedOption.value;
+            //console.log(vi3);
+            searchData.pageSize = vi3;
+            searchData.page = 1;
+            loadSpots();
+        }
+
         const pagingHandler = page => {
             searchData.page = page;
             loadSpots();
@@ -78,7 +109,7 @@
                 const data = await response.json();
                 console.log(data);
 
-                // 也可使用作業一的作法： 用 append sorting 會相反
+                // 也可使用作業一的作法：
                 for (let i = 0, max = data.spotsResult.length; i < max; i++) {
                     cardObj.querySelector('.card-img-top').src = data.spotsResult[i].spotImage;
                     cardObj.querySelector('.card-img-top').alt = data.spotsResult[i].spotTitle;
@@ -119,6 +150,8 @@
                 //    // )
                 //})
                 //divSpots.innerHTML = spots.join("");
+
+
 
                 //顯示分頁按鈕
                 let liPages = "";
