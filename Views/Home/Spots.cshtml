@@ -3,33 +3,139 @@
     ViewData["Title"] = "Spots";
 }
 
-<h1>Spots</h1>
+<h1>台北市景點</h1>
+
+<div class="row mb-3">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <nav>
+            <ul class="pagination" id="ul1">
+            </ul>
+        </nav>
+    </div>
+    <div class="col-3">
+        <input type="search" placeholder="搜尋景點資料" class="form-control" id="keywordSearch" />
+    </div>
+</div>
+<div class="card-group" id="div1">
+    <div class="card" id="card" style="display:nono">
+        <img src="" class="card-img-top" alt="">
+        <div class="card-body">
+            <h7 class="card-title"></h7>
+            <p class="card-text"></p>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted"></small>
+        </div>
+    </div>
+ </div>
+@* <div class="row row-cols-1 row-cols-md-3 g-4" id="div1"> *@
+@* <div class="card-group" id="div1"> *@
+@* </div> *@
+
+@section Styles {
+    <style>
+        .card {
+            min-width: 25%;
+            max-width: 25%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+}
 
 @section Scripts {
 <script>
+        const keywordSearch = document.querySelector('#keywordSearch');
+        const ulPaging = document.querySelector('#ul1');
+        let cardObj = document.getElementById("card");
+        const divSpots = document.querySelector('#div1');
+
     const searchData = {
         "categoryId": 0,
-        "keyword": "",
+        "keyword": "公園",
         "page":1,
         "pageSize":9,
         "sortBy":"SpotId",
-        "sortType":"ASC"
+        "sortType":"asc"
     };
+        const pagingHandler = page => {
+            searchData.page = page;
+            loadSpots();
+        }
 
-    (async()=>{
-        const url = '@Url.Content("~/API/Spots")';
+            const loadSpots = async () => {
+                divSpots.innerHTML = '';
+                const url = 'https://localhost:7085/API/Spots';
 
-        const response = await fetch(url, {
-            method: 'POST',
-            body: JOSN.stringify(searchData),
-            headers: {
-                'Condent-Type':'application/json'
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(searchData),
+                    headers: {
+                        'Content-Type':'application/json'
+                    }
+                });
+                const data = await response.json();
+                console.log(data);
+
+                // 也可使用作業一的作法： 用 append sorting 會相反
+                for (let i = 0, max = data.spotsResult.length; i < max; i++) {
+                    cardObj.querySelector('.card-img-top').src = data.spotsResult[i].spotImage;
+                    cardObj.querySelector('.card-img-top').alt = data.spotsResult[i].spotTitle;
+                    cardObj.querySelectorAll('h7').item(0).innerText = data.spotsResult[i].spotId + data.spotsResult[i].spotTitle;
+                    cardObj.querySelectorAll('p').item(0).innerText = data.spotsResult[i].spotDescription.length <= 100 ? data.spotsResult[i].spotDescription : data.spotsResult[i].spotDescription.substring(0, 100);
+                    cardObj.querySelector('.card-footer').innerText = data.spotsResult[i].openTime == '' ? data.spotsResult[i].address : data.spotsResult[i].openTime + ' \n/ ' + data.spotsResult[i].address;
+
+                    let objClone = cardObj.cloneNode(true);
+                    divSpots.appendChild(objClone);
+                }
+                
+
+                //const spots = data.spotsResult.map(spot => {
+                //    const { spotId, spotTitle, spotDescription, address, spotImage } = spot;
+                //    // cardObj.querySelector('.card-img-top').src = spotImage;
+                //    // cardObj.querySelectorAll('h7').item(0).innerText = spotTitle;
+                //    // cardObj.querySelectorAll('p').item(0).innerText = spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100);
+                //    // cardObj.querySelector('.card-footer').innerText = address;
+                //    // let objClone = cardObj.cloneNode(true);
+                //    // cardObj.parentNode.append(objClone);
+                //    return (`
+                //                                        
+                //                           <div class="card">
+                //                               <img src="${spotImage}" class="card-img-top" alt="${spotTitle}">
+                //                       <div class="card-body">
+                //                                           <h5 class="card-title">${spotId} ${spotTitle}</h5>
+                //                                                   <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}</p>
+                //                       </div>
+                //                       <div class="card-footer">
+                //                                           <small class="text-body-secondary">${address}</small>
+                //                       </div>
+                //                   </div>
+                //                    
+                //    
+                //                          `)
+                //    // return (
+                //    //     cardObj.innerHTML
+                //    // )
+                //})
+                //divSpots.innerHTML = spots.join("");
+
+                //顯示分頁按鈕
+                let liPages = "";
+                for (let i = 1, max = data.totalPages; i <= max; i++) {
+                    liPages += `<li class="page-item" onclick="pagingHandler(${i})"><a class="page-link">${i}</a></li>`
+                }
+                ulPaging.innerHTML = liPages;
+
             }
-        });
-        const datas = await response.json();
-        console.log(datas);
-    })
 
+            loadSpots();
 
-</script>
+            keywordSearch.addEventListener('keydown', event => {
+                if (event.keyCode === 13) {
+                    searchData.keyword = event.target.value;
+                    loadSpots();
+                }
+            })
+     </script>
 }

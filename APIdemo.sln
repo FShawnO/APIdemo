@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIdemo", "APIdemo.csproj", "{D583C1BE-3D85-4173-AA85-F59531DFFF74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIdemo", "APIdemo.csproj", "{D583C1BE-3D85-4173-AA85-F59531DFFF74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RESTfulAPIdemo", "..\RESTfulAPIdemo\RESTfulAPIdemo.csproj", "{6D45375B-1EB7-478E-A6F8-CE81F8F0C476}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{D583C1BE-3D85-4173-AA85-F59531DFFF74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D583C1BE-3D85-4173-AA85-F59531DFFF74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D583C1BE-3D85-4173-AA85-F59531DFFF74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D45375B-1EB7-478E-A6F8-CE81F8F0C476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D45375B-1EB7-478E-A6F8-CE81F8F0C476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D45375B-1EB7-478E-A6F8-CE81F8F0C476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D45375B-1EB7-478E-A6F8-CE81F8F0C476}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
